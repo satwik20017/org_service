@@ -48,11 +48,11 @@ export const updateOrganisation = async (req: Request, res: Response) => {
 export const getOrganisations = async (req: Request, res: Response) => {
     try {
         const SPcall = await query(
-            "CALL SP_AddOrganization()"
+            "CALL SP_GetOrganizations(null)"
         );
 
-        const results = SPcall.rows[0];
-        res.status(201).json({ status: 200, message: "Organisation created succuessfully", data: results[0]?.[0] });
+        const results = SPcall.rows?.[0];
+        res.status(201).json({ status: 200, message: "Organisation created succuessfully", data: results });
     } catch (err) {
         console.error("Database error:", err);
         res.status(500).json({ message: "Error in creating organisation" });
@@ -61,18 +61,26 @@ export const getOrganisations = async (req: Request, res: Response) => {
 
 export const getOrganisation = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params
-        const SPcall = await query(
-            "CALL SP_AddOrganization(?)", [id]
-        );
+        const { id } = req.params;
 
-        const results = SPcall.rows[0];
-        res.status(201).json({ status: 200, message: "Organisation created succuessfully", data: results[0]?.[0] });
+        const SPcall = await query("CALL SP_GetOrganizations(?)", [id]);
+        const resultSet = SPcall.rows?.[0]?.[0];
+
+        if (!resultSet) {
+            return res.status(404).json({ status: 404, message: "Organisation not found" });
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: "Organisation fetched successfully",
+            data: resultSet
+        });
     } catch (err) {
         console.error("Database error:", err);
-        res.status(500).json({ message: "Error in creating organisation" });
-    };
+        res.status(500).json({ status: 500, message: "Error in fetching organisation" });
+    }
 };
+
 
 export const createEntity = async (req: Request, res: Response) => {
     try {
