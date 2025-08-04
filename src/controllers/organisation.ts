@@ -52,10 +52,10 @@ export const getOrganisations = async (req: Request, res: Response) => {
         );
 
         const results = SPcall.rows?.[0];
-        res.status(201).json({ status: 200, message: "Organisation created succuessfully", data: results });
+        res.status(201).json({ status: 200, message: "Organisation fetched succuessfully", data: results });
     } catch (err) {
         console.error("Database error:", err);
-        res.status(500).json({ message: "Error in creating organisation" });
+        res.status(500).json({ message: "Error in fetched organisation" });
     };
 };
 
