@@ -1,0 +1,32 @@
+{
+  "name": "hrms-db-service",
+  "version": "1.0.0",
+  "description": "HRMS Database Service with MySQL",
+  "main": "app.js",
+  "scripts": {
+    "start": "ts-node src/app.ts",
+    "dev": "ts-node src/app.ts",
+    "build": "webpack",
+    "watch": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "copy-webpack-plugin": "^13.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "mysql2": "^3.6.1",
+    "path": "^0.12.7",
+    "ts-loader": "^9.5.2"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.3",
+    "@types/cors": "^2.8.14",
+    "@types/express": "^4.17.18",
+    "@types/node": "^20.8.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2",
+    "webpack-cli": "^6.0.1"
+  }
+}

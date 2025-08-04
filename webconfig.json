@@ -1,0 +1,15 @@
+{
+  "mysqlPoolConfig": {
+    "connectionLimit": 100,
+    "connectTimeout": 30000,
+    "host": "192.168.0.69",
+    "port": 6304,
+    "user": "EMR",
+    "password": "Emr@12345",
+    "database": "CORE_HRMS",
+    "multipleStatements": true
+  },
+  "PORT": 6504,
+  "host": "localhost",
+  "NODE_ENV": "development"
+}
