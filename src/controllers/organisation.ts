@@ -5,18 +5,20 @@ import { query } from '../db';
 export const createOrganisation = async (req: Request, res: Response) => {
     try {
         const {
-            id, orgName, orgCode, logo, country, language, currency, gst_vat_number, website
+            id, orgName, orgCode, logo, country, language, currency, gst_vat_number, website, email, contact_number, address
         } = req.body;
 
-        console.log(req.body);
         const SPcall = await query(
-            "CALL SP_AddOrganization(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "CALL SP_AddOrganization(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                id, orgName, orgCode, logo, country, language, currency, gst_vat_number, website
+                id, orgName, orgCode, logo, country, language, currency, gst_vat_number, website, email, contact_number, address
             ]
         );
 
         const results = SPcall.rows[0];
+        if(id){
+            res.status(201).json({ status: 200, message: "Organisation updated succuessfully", data: results[0]?.[0] });
+        }
         res.status(201).json({ status: 200, message: "Organisation created succuessfully", data: results[0]?.[0] });
     } catch (err) {
         console.error("Database error:", err);
@@ -48,7 +50,7 @@ export const updateOrganisation = async (req: Request, res: Response) => {
 export const getOrganisations = async (req: Request, res: Response) => {
     try {
         const SPcall = await query(
-            "CALL SP_GetOrganizations(null)"
+            "CALL SP_GetOrganizations(?)", [null]
         );
 
         const results = SPcall.rows?.[0];
@@ -127,11 +129,11 @@ export const updateEntity = async (req: Request, res: Response) => {
 export const getLegalEntities = async (req: Request, res: Response) => {
     try {
         const SPcall = await query(
-            "CALL SP_AddOrganization()"
+            "CALL SP_GetLegalEntities(?)", [null]
         );
 
         const results = SPcall.rows[0];
-        res.status(201).json({ status: 200, message: "Legal Entities fetched succuessfully", data: results[0]?.[0] });
+        res.status(201).json({ status: 200, message: "Legal Entities fetched succuessfully", data: results[0] });
     } catch (err) {
         console.error("Database error:", err);
         res.status(500).json({ message: "Error in fetching legal entities" });
@@ -142,11 +144,11 @@ export const getLegalEntity = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const SPcall = await query(
-            "CALL SP_AddOrganization(?)", [id]
+            "CALL SP_GetLegalEntities(?)", [id]
         );
 
         const results = SPcall.rows[0];
-        res.status(201).json({ status: 200, message: "Legal entity fetched succuessfully", data: results[0]?.[0] });
+        res.status(201).json({ status: 200, message: "Legal entity fetched succuessfully", data: results[0] });
     } catch (err) {
         console.error("Database error:", err);
         res.status(500).json({ message: "Error in fetching legal entity" });
@@ -223,6 +225,35 @@ export const deleteLocation = async (req: Request, res: Response) => {
     } catch (err) {
         console.error("Database error:", err);
         res.status(500).json({ message: "Error in deleting location" });
+    };
+};
+
+export const getLocations = async (req: Request, res: Response) => {
+    try {
+        const SPcall = await query(
+            "CALL SP_GetLocations(?)", [null]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Legal Entities fetched succuessfully", data: results[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in fetching legal entities" });
+    };
+};
+
+export const getLocation = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const SPcall = await query(
+            "CALL SP_GetLocations(?)", [id]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Legal Entities fetched succuessfully", data: results[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in fetching legal entities" });
     };
 };
 
@@ -310,5 +341,286 @@ export const getDepartments = async (req: Request, res: Response) => {
     } catch (err) {
         console.error("Database error:", err);
         res.status(500).json({ message: "Error in fetching department" });
+    };
+};
+
+
+export const createDesignation = async (req: Request, res: Response) => {
+    try {
+        const {
+            id, orgId, designationName, jobGrade, departmentId, description 
+        } = req.body;
+
+        const SPcall = await query(
+            "CALL SP_AddDesignation(?, ?, ?, ?, ?, ?)",
+            [
+            id, orgId, designationName, jobGrade, departmentId, description 
+            ]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Designation created succuessfully", data: results[0]?.[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in creating Designation" });
+    };
+};
+
+
+export const updateDesignation = async (req: Request, res: Response) => {
+    try {
+        const {
+            id, orgId, designationName, jobGrade, departmentId, description 
+        } = req.body;
+
+        const SPcall = await query(
+            "CALL SP_AddDesignation(?, ?, ?, ?, ?, ?)",
+            [
+            id, orgId, designationName, jobGrade, departmentId, description 
+            ]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Designation updated succuessfully", data: results[0]?.[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in updating Designation" });
+    };
+};
+
+
+export const getDesignations = async (req: Request, res: Response) => {
+    try {
+        const SPcall = await query(
+            "CALL SP_GetDesignations(?)", [null]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Designations fetched succuessfully", data: results});
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in fetching Designations" });
+    };
+};
+
+export const getDesignation = async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params
+        const SPcall = await query(
+            "CALL SP_GetDesignations(?)", [id]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Designation fetched succuessfully", data: results});
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in fetching Designation" });
+    };
+};
+
+export const deleteDesignation = async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params
+        const SPcall = await query(
+            "CALL SP_DeleteDesignation(?)", [id]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Designation deleted succuessfully", data: results});
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in deleted Designation" });
+    };
+};
+
+
+export const createShift = async (req: Request, res: Response) => {
+    try {
+        const {
+            id, orgId, shiftName, shiftStartTime, shiftEndTime, gracePeriod, breakDuration 
+        } = req.body;
+
+        const SPcall = await query(
+            "CALL SP_AddShift(?, ?, ?, ?, ?, ?, ?)",
+            [
+                id, orgId, shiftName, shiftStartTime, shiftEndTime, gracePeriod, breakDuration  
+            ]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Shift created succuessfully", data: results[0]?.[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in creating Shift" });
+    };
+};
+
+
+export const updateShift = async (req: Request, res: Response) => {
+    try {
+        const {
+            id, orgId, shiftName, shiftStartTime, shiftEndTime, gracePeriod, breakDuration  
+        } = req.body;
+
+        const SPcall = await query(
+            "CALL SP_AddShift(?, ?, ?, ?, ?, ?, ?)",
+            [
+            id, orgId, shiftName, shiftStartTime, shiftEndTime, gracePeriod, breakDuration  
+            ]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Shift updated succuessfully", data: results[0]?.[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in updating Shift" });
+    };
+};
+
+export const getShifts = async (req: Request, res: Response) => {
+    try {
+        const SPcall = await query(
+            "CALL SP_GetShifts(?)", [null]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Shifts fetched succuessfully", data: results});
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in fetching Shifts" });
+    };
+};
+
+export const getShift = async (req: Request, res: Response) => {
+    try {
+
+        const {id} = req.params
+        const SPcall = await query(
+            "CALL SP_GetShifts(?)", [id]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Shift fetched succuessfully", data: results});
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in fetching Shift" });
+    };
+};
+
+
+export const deleteShift = async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params
+        const SPcall = await query(
+            "CALL SP_DeleteShift(?)", [id]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Shift deleted succuessfully", data: results});
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in deleted Shift" });
+    };
+};
+
+
+
+export const createHolidayCalender = async (req: Request, res: Response) => {
+    try {
+        const {
+            id , calenderName, calenderYear, locationId
+        } = req.body;
+
+        const SPcall = await query(
+            "CALL SP_AddHolidayCalendar(?, ?, ?, ?)",
+            [
+                id , calenderName, calenderYear, locationId
+            ]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Holiday Calender created succuessfully", data: results[0]?.[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in creating Holiday Calender" });
+    };
+};
+
+
+export const updateHolidayCalender = async (req: Request, res: Response) => {
+    try {
+        const {
+            id , calenderName, calenderYear, locationId  
+        } = req.body;
+
+        const SPcall = await query(
+            "CALL SP_AddHolidayCalendar(?, ?, ?, ?)",
+            [
+            id , calenderName, calenderYear, locationId  
+            ]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Holiday Calender updated succuessfully", data: results[0]?.[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in updating Holiday Calender" });
+    };
+};
+
+
+export const getHolidayCalender = async (req: Request, res: Response) => {
+    try {
+        const {
+            id  
+        } = req.params;
+
+        const SPcall = await query(
+            "CALL SP_GetHolidayCalendars(?)",
+            [id]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Holiday Calender fetched succuessfully", data: results[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in fetching Holiday Calender" });
+    };
+};
+
+
+export const getHolidayCalenders = async (req: Request, res: Response) => {
+    try {
+
+        const SPcall = await query(
+            "CALL SP_GetHolidayCalendars(?)",
+            [null]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Holiday Calenders fetched succuessfully", data: results });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in fetching Holiday Calenders" });
+    };
+};
+
+
+export const deleteHolidayCalender = async (req: Request, res: Response) => {
+    try {
+        const {
+            id  
+        } = req.params;
+
+        const SPcall = await query(
+            "CALL SP_DeleteHolidayCalendar(?)",
+            [id]
+        );
+
+        const results = SPcall.rows[0];
+        res.status(201).json({ status: 200, message: "Holiday Calender deleted succuessfully", data: results[0] });
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ message: "Error in deleting Holiday Calender" });
     };
 };
